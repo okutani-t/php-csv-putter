@@ -64,10 +64,9 @@ class CsvPutter
 
     /**
      * レコード情報を追加するセッター
-     * レコードが1つでも必ず2次元配列で渡す
      *
      * @access public
-     * @param array $records 2次元で渡す
+     * @param array $records 1次配列か2次配列で渡す
      */
     public function setRecords($records=array())
     {
@@ -83,7 +82,7 @@ class CsvPutter
      * setHeadList()でセットするヘッダーの順番と同じにしておくと良い
      *
      * @access public
-     * @param string $keyNames 複数の引数を渡せる
+     * @param string $keyNames
      * @return object $this
      */
     public function sortRecordsByUsingKeys($keyNames=array())
@@ -96,12 +95,19 @@ class CsvPutter
             trigger_error("empty records!", E_USER_ERROR);
         }
 
-        $i = 0;
-        foreach ($this->records as $record) {
-            for($j = 0; $j < count($keyNames); $j++){
-                $rmKeyRecords[$i][] = $record[$keyNames[$j]];
+        // レコードが1次元配列か2次元配列かチェックして個別に並べ替え
+        if ($this->array_depth($this->records) === 1) {
+            foreach ($keyNames as $value) {
+                $rmKeyRecords[] = $this->records[$value];
             }
-            $i++;
+        } elseif ($this->array_depth($this->records) === 2) {
+            $i = 0;
+            foreach ($this->records as $record) {
+                for ($j = 0; $j < count($keyNames); $j++) {
+                    $rmKeyRecords[$i][] = $record[$keyNames[$j]];
+                }
+                $i++;
+            }
         }
 
         $this->records = $rmKeyRecords;
@@ -143,16 +149,39 @@ class CsvPutter
     private function csvEcoding()
     {
         // エンコーダーの無名関数
-        $encoder = function($ary){
-            return mb_convert_encoding('"' . implode('","', $ary ) . '"' . "\n", "SJIS", "auto");
+        $encoder = function($arr){
+            return mb_convert_encoding('"' . implode('","', $arr ) . '"' . "\n", "SJIS", "auto");
         };
 
         // ヘッダーのエンコーディング
         $this->hList = $encoder($this->hList);
 
-        // レコードのエンコーディング
-        for ($i = 0; $i < count($this->records); $i++) {
-            $this->records[$i] = $encoder($this->records[$i]);
+        // レコードが1次元配列か2次元配列かチェックして個別にエンコーディング
+        if ($this->array_depth($this->records) === 1) {
+            $this->records = $encoder($this->records);
+        } elseif ($this->array_depth($this->records) === 2) {
+            for ($i = 0; $i < count($this->records); $i++) {
+                $this->records[$i] = $encoder($this->records[$i]);
+            }
+        }
+    }
+
+    /**
+     * 配列の深さを調べる
+     *
+     * @param  array $arr
+     * @return int 配列の深さ
+     */
+    private function array_depth($arr, $depth=0){
+        if( !is_array($arr)){
+            return $depth;
+        } else {
+            $depth++;
+            $tmp = array();
+            foreach($arr as $value){
+                $tmp[] = $this->array_depth($value, $depth);
+            }
+            return max($tmp);
         }
     }
 
