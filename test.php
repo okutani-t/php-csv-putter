@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         ->setFilePath("./csv/test-csv.csv")
         ->setHeadList(array("名前","ID"))
         ->setRecords($records)
-        ->sortRecordsByUsingKeys("name","id")
+        ->sortRecordsByUsingKeys(array("name", "id"))
         ->execute();
 
 echo "CSV Putterが実行されました。";
