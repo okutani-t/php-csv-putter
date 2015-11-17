@@ -13,7 +13,7 @@ CsvPutter::_()
     ->setFilePath(保存するCSVファイルのパス)
     ->setHeadList(ヘッダーのリスト)
     ->setRecords(レコードのリスト)
-    ->sortRecordsByUsingKeys(レコードのKEY名...) #連想配列を並べ替えたい時
+    ->sortRecordsByUsingKeys(レコードのKEY名のリスト) #連想配列を並べ替えたい時
     ->execute();
 ```
 
@@ -33,7 +33,7 @@ CsvPutter::_()
     ->setFilePath("./csv/test-csv.csv")
     ->setHeadList(array("名前","ID"))
     ->setRecords($records)
-    ->sortRecordsByUsingKeys("name","id")
+    ->sortRecordsByUsingKeys(array("name","id"))
     ->execute();
 ```
 

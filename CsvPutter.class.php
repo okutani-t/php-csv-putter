@@ -78,20 +78,19 @@ class CsvPutter
 
     /**
      * 連想配列を使ったレコードをソートする関数
-     * sortRecordsByUsingKeys("hoge","huga","piyo")とすることで、その順番で連想配列をソーティングする
+     * 渡した配列の順番で連想配列をソーティングする
      * 呼び出し前にsetRecords()しておく必要がある
      * setHeadList()でセットするヘッダーの順番と同じにしておくと良い
      *
      * @access public
-     * @param string $key_names 複数の引数を渡せる
+     * @param string $keyNames 複数の引数を渡せる
      * @return object $this
      */
-    public function sortRecordsByUsingKeys(/*key_names*/)
+    public function sortRecordsByUsingKeys($keyNames=array())
     {
-        $key_names = func_get_args();
         // エラー処理
-        if (empty($key_names)) {
-            trigger_error("empty keys!", E_USER_ERROR);
+        if (empty($keyNames) || !is_array($keyNames)) {
+            trigger_error("error key args!", E_USER_ERROR);
         }
         if (empty($this->records)) {
             trigger_error("empty records!", E_USER_ERROR);
@@ -99,8 +98,8 @@ class CsvPutter
 
         $i = 0;
         foreach ($this->records as $record) {
-            for($j = 0; $j < count($key_names); $j++){
-                $rmKeyRecords[$i][] = $record[$key_names[$j]];
+            for($j = 0; $j < count($keyNames); $j++){
+                $rmKeyRecords[$i][] = $record[$keyNames[$j]];
             }
             $i++;
         }
