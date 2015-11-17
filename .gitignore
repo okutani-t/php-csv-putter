@@ -1,0 +1,3 @@
+# php-csv-putter .gitignore
+
+csv/*.csv
