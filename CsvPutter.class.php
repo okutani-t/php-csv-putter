@@ -150,7 +150,7 @@ class CsvPutter
     {
         // エンコーダーの無名関数
         $encoder = function($arr){
-            return mb_convert_encoding('"' . implode('","', $arr ) . '"' . "\n", "SJIS", "auto");
+            return mb_convert_encoding('"' . implode('","', $arr ) . '"' . "\r\n", "SJIS", "auto");
         };
 
         // ヘッダーのエンコーディング
