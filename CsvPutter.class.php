@@ -131,6 +131,11 @@ class CsvPutter
 
         // ヘッダーとレコードのエンコーディング処理
         $this->csvEcoding();
+        
+        // 改行コードを\nに統一
+        foreach ($this->records as $key => &$value) {
+            $value = str_replace("\r\n", "\n", $value);
+        }
 
         // ファイルが存在していなかったらヘッダーを記入して新規作成
         if (!file_exists($this->filePath)) {
