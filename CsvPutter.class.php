@@ -128,14 +128,14 @@ class CsvPutter
             empty($this->records)) {
             trigger_error("empty any item!", E_USER_NOTICE);
         }
-
-        // ヘッダーとレコードのエンコーディング処理
-        $this->csvEcoding();
         
         // 改行コードを\nに統一
         foreach ($this->records as $key => &$value) {
             $value = str_replace("\r\n", "\n", $value);
         }
+        
+        // ヘッダーとレコードのエンコーディング処理
+        $this->csvEncoding();
 
         // ファイルが存在していなかったらヘッダーを記入して新規作成
         if (!file_exists($this->filePath)) {
@@ -151,7 +151,7 @@ class CsvPutter
      *
      * @access private
      */
-    private function csvEcoding()
+    private function csvEncoding()
     {
         // エンコーダーの無名関数
         $encoder = function($arr){
