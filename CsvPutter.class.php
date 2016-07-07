@@ -140,6 +140,7 @@ class CsvPutter
         // ファイルが存在していなかったらヘッダーを記入して新規作成
         if (!file_exists($this->filePath)) {
             file_put_contents($this->filePath, $this->hList, LOCK_EX);
+            chmod($this->filePath, 0777);
         }
 
         // CSVファイルに書き込み(追記モード)
